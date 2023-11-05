@@ -6,10 +6,10 @@
 # Licensed under the GNU GPL v3.0 license
 #
 
-from PIL import Image
-from PIL import ImageOps
-import pyexiv2
 import os
+
+import pyexiv2
+from PIL import Image, ImageOps
 
 
 def fix_exif_data(imagefile):
@@ -36,6 +36,15 @@ def fix_exif_data(imagefile):
 
 
 def get_orientation_description(orientation):
+    """
+    Returns a string description of the given image orientation code.
+
+    Parameters:
+    orientation (int): An integer representing the image orientation code.
+
+    Returns:
+    str: A string description of the given image orientation code.
+    """
     orientation_descriptions = {
         1: "Normal",
         2: "Flipped horizontally",
@@ -49,7 +58,19 @@ def get_orientation_description(orientation):
     return orientation_descriptions.get(orientation, "Unknown")
 
 
+from PIL import Image, ImageOps
+
+
 def fix_image_rotation(image_path):
+    """
+    Rotates an image based on its EXIF orientation tag and saves it with orientation tag set to 1.
+
+    Args:
+        image_path (str): The file path of the image to be rotated.
+
+    Returns:
+        None
+    """
     img = Image.open(image_path)
 
     exif = img.getexif()
@@ -71,13 +92,19 @@ def fix_image_rotation(image_path):
             exif[274] = 1  # 274 corresponds to the 'Orientation' tag
             image.save(image_path, exif=img.info["exif"])
             fix_exif_data(image_path)
-            print(f"Rotated to Orientation 1")
+            print("Rotated to Orientation 1")
         print()
     else:
         print("No EXIF data found.\n")
 
 
 def rotate_images(folder_path):
+    """
+    Rotates all JPEG images in the specified folder to the correct orientation.
+
+    Args:
+        folder_path (str): The path to the folder containing the images to be rotated.
+    """
     files = os.listdir(folder_path)
     files.sort()
     for file in files:
