@@ -1,4 +1,4 @@
-# 
+#
 # fixImageRotation.py - A script to fix image rotation based on EXIF data
 #
 # (C) 2023 Marcel Verpaalen
@@ -58,9 +58,6 @@ def get_orientation_description(orientation):
     return orientation_descriptions.get(orientation, "Unknown")
 
 
-from PIL import Image, ImageOps
-
-
 def fix_image_rotation(image_path):
     """
     Rotates an image based on its EXIF orientation tag and saves it with orientation tag set to 1.
@@ -76,7 +73,8 @@ def fix_image_rotation(image_path):
     exif = img.getexif()
 
     if exif:
-        orientation = exif.get(274, 1)  # 274 corresponds to the 'Orientation' tag, default to 1 if not found
+        # 274 corresponds to the 'Orientation' tag, default to 1 if not found
+        orientation = exif.get(274, 1)
         orientation_description = get_orientation_description(orientation)
 
         # Get image dimensions (width and height)
